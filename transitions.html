@@ -67,6 +67,26 @@ nav.site-nav {
 }
 .nav-links a:hover { color: var(--indigo); }
 .nav-links a:hover::after { width: 100%; }
+/* Mobile hamburger button (hidden on desktop, shown under 880px) */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 0;
+  padding: 10px;
+  cursor: pointer;
+  line-height: 0;
+}
+.nav-toggle-bar {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: var(--indigo);
+  margin: 5px 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+nav.nav-open .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+nav.nav-open .nav-toggle-bar:nth-child(2) { opacity: 0; }
+nav.nav-open .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .nav-links a.active { color: var(--indigo); }
 .nav-links a.active::after { width: 100%; }
 
@@ -382,8 +402,27 @@ footer.site-footer {
 
 @media (max-width: 880px) {
   .nav-inner { padding: 18px 24px; }
-  .nav-links { gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
-  .nav-links a { font-size: 10px; }
+  .nav-toggle { display: block; }
+  /* Menu becomes a tap-to-open dropdown panel under the bar */
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: var(--cream);
+    border-bottom: 1px solid rgba(45, 35, 135, 0.12);
+    box-shadow: 0 14px 30px rgba(15, 10, 46, 0.10);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  nav.nav-open .nav-links { max-height: 80vh; }
+  .nav-links li { border-bottom: 1px solid rgba(45, 35, 135, 0.08); padding: 0 24px; }
+  .nav-links li:last-child { border-bottom: 0; }
+  .nav-links a { display: block; padding: 16px 2px; font-size: 12px; }
   .page-hero { padding: 90px 24px 80px; }
   section.content, section.content.alt > .content-inner { padding-left: 24px; padding-right: 24px; }
   section.content { padding-top: 70px; padding-bottom: 70px; }
@@ -413,7 +452,7 @@ footer.site-footer {
       <span class="brand-name">The Taliaferrow Team</span>
       <span class="brand-kw">at Keller Williams Realty Group</span>
     </a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="navMenu">
       <li><a href="about.html">About</a></li>
       <li><a href="sellers.html">Sellers</a></li>
       <li><a href="buyers.html">Buyers</a></li>
@@ -422,6 +461,11 @@ footer.site-footer {
       <li><a href="market-perspective.html">Market Perspective</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
   </div>
 </nav>
 
@@ -630,5 +674,30 @@ footer.site-footer {
   </div>
 </footer>
 
+<script>
+  // Mobile menu: tap-to-open hamburger
+  (function () {
+    const navEl = document.getElementById('mainNav') || document.querySelector('.site-nav');
+    const navToggle = document.getElementById('navToggle');
+    if (!navEl || !navToggle) return;
+    const closeMenu = () => {
+      navEl.classList.remove('nav-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Open menu');
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navEl.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+    navEl.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navEl.classList.contains('nav-open')) {
+        closeMenu();
+        navToggle.focus();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

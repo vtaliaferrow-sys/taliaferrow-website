@@ -1,0 +1,8 @@
+# Internal notes for Claude, not part of the website
+CLAUDE.md
+
+# macOS junk files
+.DS_Store
+
+# Local editor/preview tooling, not part of the website
+.claude/

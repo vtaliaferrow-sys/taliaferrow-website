@@ -147,6 +147,29 @@
   }
   nav.scrolled .nav-cta { border-color: var(--indigo); color: var(--indigo); }
   nav.scrolled .nav-cta:hover { background: var(--indigo); color: var(--white); }
+  /* Mobile hamburger button (hidden on desktop, shown under 968px) */
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: 0;
+    padding: 10px;
+    cursor: pointer;
+    justify-self: end;
+    line-height: 0;
+  }
+  .nav-toggle-bar {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background: var(--indigo);
+    margin: 5px 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  nav.nav-open .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  nav.nav-open .nav-toggle-bar:nth-child(2) { opacity: 0; }
+  nav.nav-open .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  /* Contact link that appears only inside the mobile menu */
+  .nav-mobile-only { display: none; }
   .hero-video {
     position: relative;
     height: 65vh;
@@ -849,9 +872,39 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
   @media (max-width: 968px) {
     .fh-banner { padding: 8px 16px; font-size: 9px; letter-spacing: 0.18em; }
-    nav { padding: 16px 24px; top: 28px; }
+    nav { padding: 16px 24px; top: 28px; grid-template-columns: 1fr auto; }
     nav.scrolled { padding: 12px 24px; }
-    .nav-links { display: none; }
+    .nav-toggle { display: block; }
+    .nav-cta { display: none; }
+    .nav-mobile-only { display: block; }
+    /* Menu becomes a tap-to-open dropdown panel under the bar */
+    .nav-row {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      padding: 0;
+      background: var(--cream);
+      border-bottom: 1px solid rgba(45, 35, 135, 0.12);
+      box-shadow: 0 14px 30px rgba(15, 10, 46, 0.10);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    nav.nav-open .nav-row { max-height: 75vh; }
+    .nav-links {
+      flex-direction: column;
+      gap: 0;
+      padding: 6px 24px 18px;
+    }
+    .nav-links li { border-bottom: 1px solid rgba(45, 35, 135, 0.08); }
+    .nav-links li:last-child { border-bottom: 0; }
+    .nav-links a {
+      display: block;
+      padding: 16px 2px;
+      font-size: 15px;
+      opacity: 1;
+    }
     .video-overlay { padding: 0 24px 60px; flex-direction: column; align-items: flex-start; gap: 24px; }
     .intro { padding: 80px 24px; }
     .paths { padding: 0 24px 80px; }
@@ -1200,7 +1253,7 @@
 
 <nav id="mainNav">
   <a href="index.html" class="brand" aria-label="The Taliaferrow Team"><span class="brand-line t1">The</span><span class="brand-line t2">Taliaferrow</span><span class="brand-line t3">Team</span></a>
-  <div class="nav-row">
+  <div class="nav-row" id="navMenu">
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="sellers.html">Sellers</a></li>
@@ -1208,9 +1261,15 @@
       <li><a href="transitions.html">Transitions</a></li>
       <li><a href="market-search.html">Market Search</a></li>
       <li><a href="market-perspective.html">Market Perspective</a></li>
+      <li class="nav-mobile-only"><a href="contact.html">Begin a Conversation</a></li>
     </ul>
   </div>
   <a href="contact.html" class="nav-cta">Begin a Conversation</a>
+  <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+    <span class="nav-toggle-bar"></span>
+  </button>
 </nav>
 
 <section class="page-header">
@@ -1399,5 +1458,30 @@
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 
+<script>
+  // Mobile menu: tap-to-open hamburger
+  (function () {
+    const navEl = document.getElementById('mainNav') || document.querySelector('.site-nav');
+    const navToggle = document.getElementById('navToggle');
+    if (!navEl || !navToggle) return;
+    const closeMenu = () => {
+      navEl.classList.remove('nav-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Open menu');
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navEl.classList.toggle('nav-open');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+    navEl.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navEl.classList.contains('nav-open')) {
+        closeMenu();
+        navToggle.focus();
+      }
+    });
+  })();
+</script>
 </body>
 </html>
