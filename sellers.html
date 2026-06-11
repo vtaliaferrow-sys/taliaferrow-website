@@ -304,6 +304,34 @@ section.content.alt.narrow > .content-inner { max-width: 820px; }
   box-shadow: 0 8px 24px rgba(45, 35, 135, 0.06);
 }
 
+/* VISIBLE SMS CONSENT NOTICE (for A2P compliance) */
+.consent-notice {
+  margin-top: 32px;
+  padding: 24px 28px;
+  background: var(--cream-wash);
+  border-left: 3px solid var(--indigo-light);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+.consent-notice strong {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--indigo);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.consent-notice a {
+  color: var(--indigo);
+  text-decoration: underline;
+  text-decoration-color: rgba(45, 35, 135, 0.3);
+  text-underline-offset: 3px;
+}
+.consent-notice a:hover { color: var(--gold); text-decoration-color: var(--gold); }
+
 /* FOOTER */
 footer.site-footer {
   background: var(--indigo-deep); color: var(--cream);
@@ -348,7 +376,7 @@ footer.site-footer {
   padding-top: 32px; border-top: 1px solid rgba(192, 192, 192, 0.2);
   display: flex; justify-content: space-between;
   flex-wrap: wrap; gap: 24px;
-  font-size: 12px; opacity: 0.6;
+  font-size: 11px; opacity: 0.6;
 }
 
 @keyframes fadeUp {
@@ -391,6 +419,7 @@ footer.site-footer {
   .footer-inner { grid-template-columns: 1fr; gap: 40px; }
   .callout { padding: 28px 24px; font-size: 18px; }
   .ghl-form-wrapper { padding: 36px 24px; }
+  .consent-notice { padding: 20px 22px; }
 }
 </style>
 </head>
@@ -506,6 +535,14 @@ footer.site-footer {
       title="Private Seller Consultation">
     </iframe>
     <script src="https://api.therealestate.buzz/js/form_embed.js"></script>
+
+    <!-- VISIBLE A2P CONSENT NOTICE — DO NOT REMOVE -->
+    <!-- This visible disclosure is required for Twilio A2P 10DLC campaign approval. -->
+    <!-- The form itself must contain an unchecked SMS consent checkbox with matching language. -->
+    <div class="consent-notice">
+      <strong>About SMS Communication</strong>
+      By checking the SMS consent box above, you agree to receive text messages from Taliaferrow Inc., doing business as The Taliaferrow Team at Keller Williams Realty Group, in response to your inquiry, such as replies to your questions, appointment scheduling, appointment reminders, and updates related to your consultation. Consent to receive text messages is not a condition of any purchase or of receiving our services. Message frequency varies. Message and data rates may apply. Reply <strong style="display:inline;font-family:inherit;letter-spacing:0;font-size:14px;text-transform:none;color:var(--indigo);">STOP</strong> to opt out at any time, or <strong style="display:inline;font-family:inherit;letter-spacing:0;font-size:14px;text-transform:none;color:var(--indigo);">HELP</strong> for help. See our <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms of Service</a> for details. No mobile information will be shared with third parties or affiliates for marketing or promotional purposes.
+    </div>
   </div>
 </section>
 
@@ -556,7 +593,7 @@ footer.site-footer {
     </div>
   </div>
   <div class="footer-bottom">
-    <div>&copy; 2026 Taliaferrow Inc. &middot; Keller Williams Realty Group &middot; Equal Housing Opportunity</div>
+    <div>&copy; 2026 Taliaferrow Inc. dba The Taliaferrow Team &middot; Keller Williams Realty Group &middot; Equal Housing Opportunity</div>
     <div>Licensed Real Estate Brokers in the State of New York</div>
   </div>
 </footer>
